@@ -23,7 +23,7 @@ http.listen(port, () => {
   )
 
   mongoose.connect(
-    keys.MONGODB_COMPASS_CONNECTION_STRING,
+    keys.MONGODB_CONNECTION_STRING,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true

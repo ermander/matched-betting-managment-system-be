@@ -9,7 +9,6 @@ class Cplay {
   }
 
   async postOdds(odds) {
-    console.log(odds)
     for (let odd of odds) {
       const isAlreadySaved = await CplayOddModel.find({
         nation: odd.nation,

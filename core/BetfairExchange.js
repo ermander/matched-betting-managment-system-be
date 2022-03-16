@@ -9,6 +9,7 @@ class BetfairExchange {
   }
 
   async postOdds(odds) {
+    if (!odds) return
     for (let odd of odds) {
       const isAlreadySaved = await BetfairExchangeModel.find({
         home: odd.home,

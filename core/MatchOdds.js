@@ -21,10 +21,12 @@ class MatchOdds {
   }
 
   calcRating(bookOdd, exchangeOdd) {
+    console.log(exchangeOdd)
     for (let objKey of Object.keys(objMarketValues)) {
       if (
         bookOdd[objKey] !== (0 || '') &&
         exchangeOdd[objMarketValues[objKey][0]][0] !== undefined &&
+        exchangeOdd[objMarketValues[objKey][0]][0].availableToLay[0] &&
         exchangeOdd[objMarketValues[objKey][0]][0].availableToLay[0].price
       ) {
         const layStake =

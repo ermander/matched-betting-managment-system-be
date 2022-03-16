@@ -21,7 +21,6 @@ class MatchOdds {
   }
 
   calcRating(bookOdd, exchangeOdd) {
-    console.log(exchangeOdd)
     for (let objKey of Object.keys(objMarketValues)) {
       if (
         bookOdd[objKey] !== (0 || '') &&
@@ -42,10 +41,28 @@ class MatchOdds {
           home: exchangeOdd.home,
           away: exchangeOdd.away,
           quota_punta: bookOdd[objKey],
-          tipo_quota_punta: '1',
+          tipo_quota_punta:
+            objKey === 'one'
+              ? '1'
+              : objKey === 'x'
+              ? 'X'
+              : objKey === 'two'
+              ? '2'
+              : objKey === 'under2_5'
+              ? 'U2.5'
+              : objKey === 'over2_5'
+              ? 'O2.5'
+              : objKey === 'goal'
+              ? 'GG'
+              : 'NG',
           quota_banca:
             exchangeOdd[objMarketValues[objKey][0]][0].availableToLay[0].price,
-          mercato: '1X2',
+          mercato:
+            objKey === ('one' | 'x' | 'two')
+              ? '1'
+              : objKey === ('under2_5', 'over2_5')
+              ? 'U/0'
+              : 'GG/NG',
           liquidity:
             exchangeOdd[objMarketValues[objKey][0]][0].availableToLay[0].price,
           rating,

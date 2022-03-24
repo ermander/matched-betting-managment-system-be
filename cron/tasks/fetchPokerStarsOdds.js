@@ -1,14 +1,38 @@
+require('dotenv').config()
 const axios = require('axios')
 const sleep = require('../../services/sleep')
 const moment = require('moment')
+const PokerStarsModel = require('../../models/pokerStars.model')
+
 const {
   competitionIds,
   marketCodes,
   baseUrl,
   marketNames
 } = require('../../utils/links/pokerStarsLinks')
+const mongoose = require('mongoose')
+const keys = require('../../config/environments/keys')
 
 async function fetchPokerStarsOdds() {
+  mongoose.connect(
+    keys.MONGODB_CONNECTION_STRING,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    },
+    (err) => {
+      if (err) {
+        logger.error('Error connection to DB')
+      }
+    }
+  )
+
+  const { connection } = mongoose
+
+  connection.once('open', () => {
+    console.log('DB connection made')
+  })
+
   while (true) {
     const matches = []
 
@@ -24,7 +48,7 @@ async function fetchPokerStarsOdds() {
           const match = {}
 
           if (market === '3AAXB%2CMRES') {
-            match._id = matchInfo.id
+            match.pokerStarId = matchInfo.id
             match.tournament = matchInfo.compName.split(' - ')[0]
             match.nation = matchInfo.compName.split(' - ')[1]
             match.home = matchInfo.names.longName.split(' vs ')[0]
@@ -42,18 +66,34 @@ async function fetchPokerStarsOdds() {
             }
 
             matches.push(match)
-          } else if (market === ('3AOU%2COVUN' || '3ABTS%2CBTSC')) {
-            const matchIndex = matches.findIndex((e) => e._id === matchInfo.id)
+          } else if (market === '3AOU%2COVUN') {
+            const matchIndex = matches.findIndex(
+              (e) => e.pokerStarId === matchInfo.id
+            )
 
             for (let market of matchInfo.markets) {
               for (let selection of market.selection) {
-                matches[matchIndex][selection.name] = parseFloat(
+                matches[matchIndex][marketNames[selection.name]] = parseFloat(
+                  parseFloat(selection.odds.dec).toFixed(2)
+                )
+              }
+            }
+          } else if (market === '3ABTS%2CBTSC') {
+            const matchIndex = matches.findIndex(
+              (e) => e.pokerStarId === matchInfo.id
+            )
+
+            for (let market of matchInfo.markets) {
+              for (let selection of market.selection) {
+                matches[matchIndex][marketNames[selection.name]] = parseFloat(
                   parseFloat(selection.odds.dec).toFixed(2)
                 )
               }
             }
           } else {
-            const matchIndex = matches.findIndex((e) => e._id === matchInfo.id)
+            const matchIndex = matches.findIndex(
+              (e) => e.pokerStarId === matchInfo.id
+            )
 
             for (let market of matchInfo.markets) {
               for (let selection of market.selection) {
@@ -73,8 +113,12 @@ async function fetchPokerStarsOdds() {
         await sleep(5000)
       }
     }
-    console.log(matches)
-    console.log('Attendo')
+    for (let match of matches) {
+      console.log(match)
+      const newMatch = new PokerStarsModel(match)
+      const doc = await newMatch.save()
+      console.log(doc)
+    }
   }
 }
 

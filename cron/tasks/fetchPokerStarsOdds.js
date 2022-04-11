@@ -22,7 +22,7 @@ async function fetchPokerStarsOdds() {
     },
     (err) => {
       if (err) {
-        logger.error('Error connection to DB')
+        console.log('Error connection to DB')
       }
     }
   )

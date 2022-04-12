@@ -1,6 +1,11 @@
 const { Schema, model } = require('mongoose')
 
 const cplayOddsSchema = new Schema({
+  matchId: {
+    type: Number,
+    required: true
+  },
+  sportName: { type: String },
   nation: {
     type: String,
     required: true
@@ -10,10 +15,6 @@ const cplayOddsSchema = new Schema({
     required: true
   },
   date: {
-    type: String,
-    required: true
-  },
-  hour: {
     type: String,
     required: true
   },
@@ -90,19 +91,19 @@ const cplayOddsSchema = new Schema({
     type: Number,
     required: true
   },
-  goalHistory: {
-    type: Number,
-    required: true
-  },
-  noGoalHistory: {
-    type: Number,
-    required: true
-  },
   under2_5History: {
     type: Number,
     required: true
   },
   over2_5History: {
+    type: Number,
+    required: true
+  },
+  goalHistory: {
+    type: Number,
+    required: true
+  },
+  noGoalHistory: {
     type: Number,
     required: true
   }

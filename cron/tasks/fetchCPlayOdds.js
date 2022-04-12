@@ -10,7 +10,7 @@ async function fetchCPlayOdds() {
     keys.MONGODB_CONNECTION_STRING,
     {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
     },
     (err) => {
       if (err) {
@@ -37,8 +37,12 @@ async function fetchCPlayOdds() {
               event.matchId = match.id
               event.nation = match.countryName
               event.tournament = match.groupName
-              event.home = match.hteam
-              event.away = match.ateam
+              event.home = `${match.hteam.charAt(0)}${match.hteam
+                .slice(1)
+                .toLowerCase()}`
+              event.away = `${match.ateam.charAt(0)}${match.ateam
+                .slice(1)
+                .toLowerCase()}`
               event.date = match.matchTime
               event.sportName = match.sportName
               events.push(event)
@@ -58,15 +62,20 @@ async function fetchCPlayOdds() {
           }
 
           for (const event of events) {
-            const eventOdds = odds.filter(odd => odd.matchId === event.matchId)
+            const eventOdds = odds.filter(
+              (odd) => odd.matchId === event.matchId
+            )
             for (const eventOdd of eventOdds) {
               event[marketIds[eventOdd.outcomeId]] = eventOdd.odd
             }
           }
 
           try {
-            await axios.post(`${keys.AXIOS_BASE_URL}/api/scrapers-endpoints/cplay/post-odds`, events)
-            console.log("OK")
+            await axios.post(
+              `${keys.AXIOS_BASE_URL}/api/scrapers-endpoints/cplay/post-odds`,
+              events
+            )
+            console.log('OK')
           } catch (error) {
             console.log(error)
           }
@@ -82,4 +91,3 @@ async function fetchCPlayOdds() {
 }
 
 fetchCPlayOdds()
-

@@ -1,7 +1,7 @@
 const CplayOddModel = require('../models/cplayOdds.model')
 
 class Cplay {
-  constructor() { }
+  constructor() {}
 
   async getOdds(filters) {
     this.cplayOdds = await CplayOddModel.find(filters)
@@ -28,9 +28,12 @@ class Cplay {
 
         await cPlayOdd.save()
       } else {
-        await CplayOddModel.findOneAndUpdate({ matchId: checkOdd.matchId }, {
-          odd
-        })
+        await CplayOddModel.findOneAndUpdate(
+          { matchId: checkOdd.matchId },
+          {
+            ...odd,
+          }
+        )
       }
     }
   }

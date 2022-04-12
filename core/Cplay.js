@@ -29,17 +29,7 @@ class Cplay {
         await cPlayOdd.save()
       } else {
         await CplayOddModel.findOneAndUpdate({ matchId: checkOdd.matchId }, {
-          ...odd,
-          oneHistory: odd.one,
-          xHistory: odd.x,
-          twoHistory: odd.two,
-          oneXHistory: odd.oneX,
-          xTwoHistory: odd.xTwo,
-          oneTwoHistory: odd.oneTwo,
-          under2_5History: odd.under2_5,
-          over2_5History: odd.over2_5,
-          goalHistory: odd.goal,
-          noGoalHistory: odd.noGoal,
+          odd
         })
       }
     }

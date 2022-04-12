@@ -1,5 +1,18 @@
 const baseUrl = 'https://api.cplay.it/api/Palinsesto/GetManifestazioneCore?v='
 
+const marketIds = {
+  'd8643d3a-8080-1094-1810-9fbf97ff48d7': "one",
+  '70d0925a-c237-f0f2-1e5e-753b62df80ed': "x",
+  'e1ae8fa1-f7ec-74fb-1224-418f7bafb744': "two",
+  "31a89678-730c-1e27-435b-8222a6064a2a": "oneX",
+  "dbb1b113-0ed5-a53c-1a4b-1ced1e3e3251": "xTwo",
+  "67cfbf78-cf79-e051-2680-87e49666c6e0": "oneTwo",
+  'edca0549-8d2a-47bc-a0cf-c83796df6fbe': "under2_5",
+  'fb0e9c76-5298-44dd-bf9d-a7337b2b0bf5': "over2_5",
+  '0aa8aed7-f434-d65e-8c43-f256f34e7f86': "goal",
+  'a6d6e835-ee26-c427-ba05-c4ac812b0b86': "noGoal"
+}
+
 const links = [
   // Champions League
   'c467243fbcc9a1b1b8a04a64262d16448d97dd60e69024e130e96f3b1077bb4c',
@@ -45,4 +58,4 @@ const links = [
   '0971133aee4c110edf9b992983a7bb0afd85a477a86f6e935c814646a92dc590'
 ]
 
-module.exports = { baseUrl, links }
+module.exports = { baseUrl, marketIds, links }

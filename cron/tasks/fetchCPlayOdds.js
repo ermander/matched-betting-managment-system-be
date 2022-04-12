@@ -1,9 +1,10 @@
 require('dotenv').config()
 const axios = require('axios')
 const sleep = require('../../services/sleep')
+const randomSleep = require('../../services/randomSleep')
 const moment = require('moment')
 const mongoose = require('mongoose')
-const { baseUrl, links } = require('../../utils/links/cPlayLinks')
+const { baseUrl, marketIds, links } = require('../../utils/links/cPlayLinks')
 const keys = require('../../config/environments/keys')
 
 async function fetchCPlayOdds() {
@@ -30,38 +31,55 @@ async function fetchCPlayOdds() {
         let data = await axios.post(`${baseUrl}${link}`)
         data = data.data.ResponseData[0]
 
-        for (let date = 0; date < data.dates.length; date++) {
-          //console.log(data.dates[date])
-          for (
-            let match = 0;
-            match < data.dates[date].matches.length;
-            match++
-          ) {
+        const events = []
+        for (const date of data.dates) {
+          for (const match of date.matches) {
             const event = {}
-            event.away = `${data.dates[date].matches[match].ateam
-              .charAt(0)
-              .toUpperCase()}${data.dates[date].matches[match].ateam
-              .slice(1)
-              .toLowerCase()}`
-            event.home = `${data.dates[date].matches[match].hteam
-              .charAt(0)
-              .toUpperCase()}${data.dates[date].matches[match].hteam
-              .slice(1)
-              .toLowerCase()}`
-            event.nation = data.dates[date].matches[match].countryName
-            event.tournament = data.dates[date].matches[match].groupName
-            event.date = data.dates[date].matches[match].matchTime
-
-            console.log(event)
+            event.matchId = match.id
+            event.nation = match.countryName
+            event.tournament = match.groupName
+            event.home = match.hteam
+            event.away = match.ateam
+            event.date = match.matchTime
+            event.sportName = match.sportName
+            events.push(event)
           }
         }
-        // 28160450
-        //console.log(data)
-        console.log('Waiting 15 seconds')
-        await sleep(15000)
+
+
+        // Creo un array "lineare" dove inserire tutte le quote
+        const odds = []
+        for (const oddsContainer of data.data) {
+          for (const oddInfo of oddsContainer.outcomes) {
+            const odd = {}
+            odd.matchId = oddsContainer.matchId
+            odd.odd = oddInfo.odd
+            odd.outcomeId = oddInfo.outcomeId
+            odds.push(odd)
+          }
+        }
+
+        for (const event of events) {
+          const eventOdds = odds.filter(odd => odd.matchId === event.matchId)
+          for (const eventOdd of eventOdds) {
+            event[marketIds[eventOdd.outcomeId]] = eventOdd.odd
+          }
+          console.table(event)
+        }
+
+
+
+
+
+
+        console.log('Waiting...')
+        console.time()
+        await randomSleep(15000, 5)
+        console.timeEnd()
       }
     }
   })
 }
 
 fetchCPlayOdds()
+

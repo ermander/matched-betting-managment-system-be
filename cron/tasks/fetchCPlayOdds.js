@@ -4,6 +4,7 @@ const randomSleep = require('../../services/randomSleep')
 const mongoose = require('mongoose')
 const { baseUrl, marketIds, links } = require('../../utils/links/cPlayLinks')
 const keys = require('../../config/environments/keys')
+const fetchBetfairOdds = require("./fetchBetfairOdds")
 
 async function fetchCPlayOdds() {
   mongoose.connect(
@@ -74,6 +75,18 @@ async function fetchCPlayOdds() {
             await axios.post(
               `${keys.AXIOS_BASE_URL}/api/scrapers-endpoints/cplay/post-odds`,
               events
+            )
+            console.log('OK')
+          } catch (error) {
+            console.log(error)
+          }
+
+          const betfairOdds = await fetchBetfairOdds(events)
+
+          try {
+            await axios.post(
+              `${keys.AXIOS_BASE_URL}/api/scrapers-endpoints/betfair-exchange/post-odds`,
+              betfairOdds
             )
             console.log('OK')
           } catch (error) {

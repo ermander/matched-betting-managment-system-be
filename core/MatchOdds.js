@@ -45,24 +45,24 @@ class MatchOdds {
             objKey === 'one'
               ? '1'
               : objKey === 'x'
-              ? 'X'
-              : objKey === 'two'
-              ? '2'
-              : objKey === 'under2_5'
-              ? 'U2.5'
-              : objKey === 'over2_5'
-              ? 'O2.5'
-              : objKey === 'goal'
-              ? 'GG'
-              : 'NG',
+                ? 'X'
+                : objKey === 'two'
+                  ? '2'
+                  : objKey === 'under2_5'
+                    ? 'U2.5'
+                    : objKey === 'over2_5'
+                      ? 'O2.5'
+                      : objKey === 'goal'
+                        ? 'GG'
+                        : 'NG',
           quota_banca:
             exchangeOdd[objMarketValues[objKey][0]][0].availableToLay[0].price,
           mercato:
             objKey === ('one' | 'x' | 'two')
               ? '1'
               : objKey === ('under2_5', 'over2_5')
-              ? 'U/0'
-              : 'GG/NG',
+                ? 'U/0'
+                : 'GG/NG',
           liquidity:
             exchangeOdd[objMarketValues[objKey][0]][0].availableToLay[0].price,
           rating,
